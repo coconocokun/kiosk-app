@@ -7,7 +7,7 @@ export default function NavBar() {
 
   return (
     <nav className="bg-blue-600 text-white flex justify-between items-center p-4">
-      <h1 className="text-2xl font-bold">Kiosk App</h1>
+      <h1 className="text-2xl font-bold">Awesome Clothes Kiosk</h1>
       <div className="relative">
         <Image src={"/cart.svg"} alt="cart" width={32} height={32} />
         {itemCount > 0 && (
