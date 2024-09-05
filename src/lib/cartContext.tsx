@@ -11,7 +11,7 @@ interface CartItem {
 interface CartContextType {
   cart: CartItem[];
   addToCart: (item: Item, count: number) => void;
-  removeFromCart: (itemId: number) => void;
+  removeFromCart: (itemId: string) => void;
   clearCart: () => void;
 }
 
@@ -36,7 +36,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   // removeFromCart
-  const removeFromCart = (itemId: number) => {
+  const removeFromCart = (itemId: string) => {
     setCart((prevCart) => prevCart.filter((cartItem) => cartItem.item.id != itemId));
   };
 
