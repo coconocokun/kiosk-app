@@ -10,6 +10,11 @@ interface ItemPopupProps {
 export default function ItemPopup({ item, onClose, onAddToCart }: ItemPopupProps) {
   const [count, setCount] = useState(1);
 
+  const handleAddToCart = () => {
+    onAddToCart(item, count);
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white rounded-lg w-96 p-6">
@@ -36,7 +41,7 @@ export default function ItemPopup({ item, onClose, onAddToCart }: ItemPopupProps
             </button>
           </div>
         </div>
-        <button className="w-full bg-blue-600 text-white py-2 rounded-lg" onClick={() => onAddToCart(item, count)}>
+        <button className="w-full bg-blue-600 text-white py-2 rounded-lg" onClick={handleAddToCart}>
           Add to Cart
         </button>
       </div>

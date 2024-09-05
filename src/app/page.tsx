@@ -10,6 +10,7 @@ import { Item } from "@/db/types";
 import { useCart } from "@/lib/cartContext";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { searchVectorDb } from "./actions";
 
 const categories = ["Category A", "Category B"];
 
@@ -24,14 +25,38 @@ export default function Home() {
   const filterItems = items.filter((item) => {
     const matchCategory = selectedCategory == "All" || item.category == selectedCategory;
 
-    const matchTitle = item.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchDescription = item.description.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return (matchCategory && matchTitle) || (matchCategory && matchDescription);
+    return matchCategory;
   });
 
   useEffect(() => {
-    setDisplayedItems(filterItems);
+    const fetchSearchData = async () => {
+      if (searchQuery == "") {
+        return filterItems;
+      }
+      const results = await searchVectorDb(searchQuery);
+      const filtered = items
+        .filter((item) => {
+          if (selectedCategory != "All" && item.category != selectedCategory) {
+            return false;
+          }
+          return results.some((result) => result.id == item.id);
+        })
+        .map((item) => {
+          const result = results.find((result) => result.id == item.id);
+          return { ...item, score: result?.score };
+        })
+        .sort((a, b) => b.score! - a.score!);
+      return filtered;
+    };
+
+    fetchSearchData()
+      .then((filtered) => {
+        console.log(filtered);
+        setDisplayedItems(filtered);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, [selectedCategory, searchQuery]);
 
   return (
